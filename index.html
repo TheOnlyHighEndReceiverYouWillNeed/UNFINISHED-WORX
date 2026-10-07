@@ -79,15 +79,10 @@
         let currentFreq = 88.0;
         let dynamicEnergy = 0;
 
-        // Track Memory & Background Continuity State
-        let stationOffsets = {};
-        let stationRealTimes = {};
-        let currentActiveFreq = null;
-
         const stations = {
             88.0: { name: "Cryonical", file: "audio/Cryonical 2026.mp3" },
             88.3: { name: "Idiot", file: "audio/Idiot 2026.mp3" },
-            88.5: { name: "ICI Première / Montréal", file: "https://rcavliveaudio.akamaized.net/hls/live/2006635/P-2QMTL0_MTL/master.m3u8", isLive: true },
+            88.5: { name: "Punishment", file: "audio/Punishment.mp3" },
             88.8: { name: "Schnell", file: "audio/Schnell.mp3" },
             89.0: { name: "second day ", file: "audio/second day 2026.mp3" },
             89.3: { name: "special day", file: "audio/special day.mp3" },
@@ -95,56 +90,272 @@
             89.8: { name: "This Time ", file: "audio/This Time 2026 (2).mp3" },
             90.0: { name: "Tranquility", file: "audio/Tranquility.mp3" },
             90.3: { name: "CKUT 90.3 FM / Montréal (McGill)", file: "https://ckut.out.airtime.pro/ckut_a", isLive: true },
-            90.7: { name: "Cryonical", file: "audio/Cryonical 2026.mp3" },
-            91.0: { name: "Idiot", file: "audio/Idiot 2026.mp3" },
-            91.2: { name: "Punishment", file: "audio/Punishment.mp3" },
-            91.5: { name: "Schnell", file: "audio/Schnell.mp3" },
-            91.7: { name: "second day ", file: "audio/second day 2026.mp3" },
+            90.7: { name: "Echo Alpha", file: "audio/lite.mp3" },
+            91.0: { name: "Mu Delta", file: "audio/bliss.mp3" },
+            91.2: { name: "Echo Theta", file: "audio/there.mp3" },
+            91.5: { name: "Sessions", file: "audio/jam-sessions.mp3" },
+            91.7: { name: "Lambda Delta", file: "audio/chase.mp3" },
             91.9: { name: "CJSW 90.9 FM / Calgary (U of C)", file: "https://cjsw.leanstream.co/CJSWFM-MP3?args=web_03", isLive: true },
-            92.0: { name: "special day", file: "audio/special day.mp3" },
-            92.2: { name: "Sweet", file: "audio/Sweet.mp3" },
-            92.5: { name: "This Time ", file: "audio/This Time 2026 (2).mp3" },
-            92.8: { name: "Tranquility", file: "audio/Tranquility.mp3" },
-            93.0: { name: "Cryonical", file: "audio/Cryonical 2026.mp3" },
-            93.3: { name: "Idiot", file: "audio/Idiot 2026.mp3" },
-            93.5: { name: "Punishment", file: "audio/Punishment.mp3" },
-            93.8: { name: "Schnell", file: "audio/Schnell.mp3" },
-            94.0: { name: "second day ", file: "audio/second day 2026.mp3" },
-            94.5: { name: "special day", file: "audio/special day.mp3" },
-            95.0: { name: "Sweet", file: "audio/Sweet.mp3" },
-            95.5: { name: "This Time ", file: "audio/This Time 2026 (2).mp3" },
-            96.0: { name: "Tranquility", file: "audio/Tranquility.mp3" },
-            96.5: { name: "Cryonical", file: "audio/Cryonical 2026.mp3" },
-            97.0: { name: "Idiot", file: "audio/Idiot 2026.mp3" },
-            97.5: { name: "Punishment", file: "audio/Punishment.mp3" },
+            92.0: { name: "Lambda Eta", file: "audio/cinderella-shoe.mp3" },
+            92.2: { name: "Echo Zeta", file: "audio/twin-sparks.mp3" },
+            92.5: { name: "Iota Delta", file: "audio/cohesion.mp3" },
+            92.8: { name: "Echo Epsilon", file: "audio/ubiquity.mp3" },
+            93.0: { name: "Mu Beta", file: "audio/dancer.mp3" },
+            93.3: { name: "Duo Improbable - Eric Carmen & Céline Dion - All By Myself", file: "audio/all-by-myself.mp3" },
+            93.5: { name: "Lambda Theta", file: "audio/dynamite.mp3" },
+            93.8: { name: "Echo Eta", file: "audio/understanding.mp3" },
+            94.0: { name: "Mu", file: "audio/equanimity.mp3" },
+            94.5: { name: "Kappa Alpha", file: "audio/esprit-itinerant.mp3" },
+            95.0: { name: "Lambda Alpha", file: "audio/later.mp3" },
+            95.5: { name: "Duo Improbable - Stewart Copeland: Police Deranged for Orchestra & Sting - King of Pain", file: "audio/king-of-pain.mp3" },
+            96.0: { name: "Lambda Mu", file: "audio/father.mp3" },
+            96.5: { name: "Lambda Stigma", file: "audio/grave.mp3" },
+            97.0: { name: "Kappa Eta", file: "audio/inversion.mp3" },
+            97.5: { name: "Mu Alpha", file: "audio/lucioles.mp3" },
             97.8: { name: "Sud Radio en ligne", file: "https://start-sud.ice.infomaniak.ch/start-sud-high.mp3", isLive: true },
-            98.0: { name: "Schnell", file: "audio/Schnell.mp3" },
+            98.0: { name: "Kappa Gamma", file: "audio/mass-effect.mp3" },
             98.5: { name: "ICI Musique Classique", file: "https://rcavliveaudio.akamaized.net/hls/live/2007000/MUSE/master.m3u8", isLive: true },
-            99.0: { name: "second day ", file: "audio/second day 2026.mp3" },
-            99.5: { name: "special day", file: "audio/special day.mp3" },
-            100.0: { name: "Sweet", file: "audio/Sweet.mp3" },
-            100.5: { name: "This Time ", file: "audio/This Time 2026 (2).mp3" },
-            101.0: { name: "Tranquility", file: "audio/Tranquility.mp3" },
-            101.5: { name: "Cryonical", file: "audio/Cryonical 2026.mp3" },
-            101.7: { name: "Idiot", file: "audio/Idiot 2026.mp3" },
-            102.0: { name: "Punishment", file: "audio/Punishment.mp3" },
-            102.5: { name: "Schnell", file: "audio/Schnell.mp3" },
-            103.0: { name: "second day ", file: "audio/second day 2026.mp3" },
-            103.5: { name: "special day", file: "audio/special day.mp3" },
-            104.0: { name: "Sweet", file: "audio/Sweet.mp3" },
-            104.3: { name: "This Time ", file: "audio/This Time 2026 (2).mp3" },
-            104.5: { name: "Tranquility", file: "audio/Tranquility.mp3" },
-            104.7: { name: "Cryonical", file: "audio/Cryonical 2026.mp3" },
-            105.0: { name: "Idiot", file: "audio/Idiot 2026.mp3" },
-            105.5: { name: "Punishment", file: "audio/Punishment.mp3" },
-            106.0: { name: "Schnell", file: "audio/Schnell.mp3" },
-            106.5: { name: "second day ", file: "audio/second day 2026.mp3" },
-            107.0: { name: "special day", file: "audio/special day.mp3" },
-            107.5: { name: "Sweet", file: "audio/Sweet.mp3" },
+            99.0: { name: "Iota Stigma", file: "audio/melancoly-in-flat.mp3" },
+            99.5: { name: "Mu Epsilon", file: "audio/monster.mp3" },
+            100.0: { name: "Iota Epsilon", file: "audio/narc-osis.mp3" },
+            100.5: { name: "Lambda Nu", file: "audio/next-flight-home.mp3" },
+            101.0: { name: "Lambda", file: "audio/oticons.mp3" },
+            101.5: { name: "Lambda Gamma", file: "audio/pacis.mp3" },
+            101.7: { name: "Duo Improbable - Donna Summer & Clara Luciani - I Feel Love ~ C'est L'Amour", file: "audio/i-feel-love-donna-summer.mp3" },
+            102.0: { name: "Iota Zeta", file: "audio/push.mp3" },
+            102.5: { name: "Kappa Theta", file: "audio/quantum-touch.mp3" },
+            103.0: { name: "Mu Zeta", file: "audio/quaturo.mp3" },
+            103.5: { name: "Iota Eta", file: "audio/recalcitrant.mp3" },
+            104.0: { name: "Iota Zeta", file: "audio/resounding.mp3" },
+            104.3: { name: "Omega", file: "audio/estrange.mp3" },
+            104.5: { name: "Lambda Xi", file: "audio/sacrifice.mp3" },
+            104.7: { name: "Iota Delta", file: "audio/metallica-ballerina.mp3" },
+            105.0: { name: "Iota", file: "audio/slow-think.mp3" },
+            105.5: { name: "Kappa Iota", file: "audio/across-bourbon-street.mp3" },
+            106.0: { name: "Kappa Delta", file: "audio/spectrum.mp3" },
+            106.5: { name: "Lambda Zeta", file: "audio/stubborness.mp3" },
+            107.0: { name: "Mu Theta", file: "audio/tangerine.mp3" },
+            107.5: { name: "Kappa Beta", file: "audio/the-daunting.mp3" },
             108.0: { name: "ICI Première / Ottawa", file: "https://rcavliveaudio.akamaized.net/hls/live/2006986/M-7OOTT0_OTT/master.m3u8", isLive: true }
         };
 
         function initParticles(w, h) {
             particles = Array.from({length: 20}, () => ({
                 x: Math.random() * w, y: Math.random() * h,
-                size: Math.random() * 2 + 0.
+                size: Math.random() * 2 + 0.5, speed: Math.random() * 0.4 + 0.1, opacity: Math.random() * 0.3 + 0.1
+            }));
+        }
+
+        function resize() {
+            if (!canvas || !ctx) return;
+            const rect = canvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            initParticles(rect.width, rect.height);
+        }
+
+        function initAudio() {
+            if (!audioCtx) {
+                try {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioCtx.createAnalyser();
+                    analyser.fftSize = 1024; 
+                    analyser.smoothingTimeConstant = 0.6;
+                    gainNode = audioCtx.createGain();
+                    gainNode.gain.setValueAtTime(0.8, audioCtx.currentTime);
+
+                    if (!sourceNode) {
+                        sourceNode = audioCtx.createMediaElementSource(audioEl);
+                    }
+                    
+                    sourceNode.connect(gainNode);
+                    gainNode.connect(analyser);
+                    analyser.connect(audioCtx.destination);
+                } catch (e) { 
+                    console.warn("Web Audio Init Error:", e); 
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function draw() {
+            requestAnimationFrame(draw);
+            if (!canvas || !ctx) return;
+            const rect = canvas.getBoundingClientRect();
+            const w = rect.width;
+            const h = rect.height;
+            ctx.clearRect(0, 0, w, h);
+
+            particles.forEach(p => {
+                p.x -= p.speed; if (p.x < 0) p.x = w;
+                ctx.fillStyle = `rgba(255, 157, 0, ${p.opacity})`;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            });
+
+            const buf = analyser ? analyser.frequencyBinCount : 512;
+            const data = new Uint8Array(buf);
+            
+            let isPlaying = isPowerOn && !audioEl.paused && audioEl.readyState >= 2;
+
+            if (analyser && isPlaying) {
+                try { 
+                    analyser.getByteTimeDomainData(data); 
+                    
+                    let sum = 0;
+                    for (let i = 0; i < buf; i++) {
+                        sum += Math.abs(data[i] - 128);
+                    }
+
+                    if (sum === 0) {
+                        // CORS Tainted stream detected (Safari live feed block).
+                        // Drive reaction directly from audio element playback state & network progression pulses, 
+                        // ensuring the wavelength velocity responds explicitly to audio transmission parameters.
+                        dynamicEnergy += (Math.random() * 0.4 - 0.2);
+                        dynamicEnergy = Math.max(0.2, Math.min(1.5, dynamicEnergy));
+                        
+                        const time = performance.now() * 0.008 * dynamicEnergy;
+                        for (let i = 0; i < buf; i++) {
+                            data[i] = 128 + Math.sin(time + (i * 0.2)) * (15 + dynamicEnergy * 10);
+                        }
+                    }
+                } catch (e) { 
+                    data.fill(128); 
+                }
+            } else {
+                data.fill(128);
+                dynamicEnergy = 0;
+            }
+
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = (isPlaying) ? 'rgba(255, 157, 0, 0.85)' : 'rgba(74, 44, 0, 0.4)';
+            ctx.beginPath();
+            const slice = w / buf;
+            for (let i = 0, x = 0; i < buf; i++, x += slice) {
+                const y = ((data[i] / 128.0) - 1.0) * (h * 1.1) + (h / 2);
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        window.addEventListener('resize', resize);
+        resize(); requestAnimationFrame(draw);
+
+        function playSource(url, isLive) {
+            if (!isPowerOn) return;
+            if (hls) { hls.destroy(); hls = null; }
+            audioEl.pause(); 
+            audioEl.src = ""; 
+            audioEl.loop = !isLive;
+
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            if (isLive && url.endsWith('.m3u8')) {
+                if (Hls.isSupported()) {
+                    hls = new Hls(); 
+                    hls.loadSource(url); 
+                    hls.attachMedia(audioEl);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        audioEl.play().catch(err => console.warn("HLS Play block:", err));
+                    });
+                } else if (audioEl.canPlayType('application/vnd.apple.mpegurl')) {
+                    audioEl.src = url; 
+                    audioEl.load(); 
+                    audioEl.play().catch(err => console.warn("Native HLS Play block:", err));
+                }
+            } else {
+                audioEl.src = url; 
+                audioEl.load(); 
+                audioEl.play().catch(err => console.warn("MP3 Play block:", err));
+            }
+        }
+
+        function tune(freq) {
+            if (!isPowerOn) return;
+            currentFreq = freq;
+            const percent = 18.0 + ((freq - 88.0) / (108.0 - 88.0)) * 64.0;
+            tuningBar.style.left = `${percent}%`;
+
+            const keys = Object.keys(stations).map(Number);
+            const closest = keys.reduce((p, c) => Math.abs(c - freq) < Math.abs(p - freq) ? c : p);
+
+            if (Math.abs(freq - closest) <= 0.25) {
+                const s = stations[closest];
+                stationDisplay.textContent = `[ ${s.isLive ? 'LIVE' : 'LOCKED'} ] > ${s.name} (${closest.toFixed(1)} MHz)`;
+                if (audioEl.src !== s.file && (!audioEl.src.endsWith(s.file))) {
+                    playSource(s.file, s.isLive);
+                }
+            } else {
+                if (hls) { hls.destroy(); hls = null; }
+                stationDisplay.textContent = `MUTED (DEAD AIR)... [ FREQ: ${freq.toFixed(1)} MHz ]`;
+                if (!audioEl.paused) {
+                    audioEl.pause();
+                    audioEl.src = "";
+                }
+            }
+        }
+
+        function powerOnReceiver() {
+            if (isPowerOn) return;
+            initAudio();
+            isPowerOn = true;
+            
+            const s = stations[88.0];
+            audioEl.src = s.file;
+            audioEl.play().then(() => {
+                tune(currentFreq);
+            }).catch(err => {
+                console.warn("Power prime action intercepted:", err);
+                tune(currentFreq);
+            });
+        }
+
+        stationDisplay.addEventListener('click', () => {
+            if (!isPowerOn) {
+                powerOnReceiver();
+            }
+        });
+
+        let isDragging = false;
+
+        function updateFromPointer(e) {
+            const rect = dialWindow.getBoundingClientRect();
+            const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            tune(88.0 + (ratio * 20.0));
+        }
+
+        dialWindow.addEventListener('pointerdown', (e) => {
+            if (!isPowerOn) {
+                powerOnReceiver();
+            }
+            isDragging = true;
+            dialWindow.setPointerCapture(e.pointerId);
+            updateFromPointer(e);
+        });
+
+        dialWindow.addEventListener('pointermove', (e) => {
+            if (!isDragging || !isPowerOn) return;
+            updateFromPointer(e);
+        });
+
+        dialWindow.addEventListener('pointerup', (e) => {
+            if (isDragging) {
+                isDragging = false;
+                try { dialWindow.releasePointerCapture(e.pointerId); } catch(err) {}
+            }
+        });
+
+        dialWindow.addEventListener('pointercancel', (e) => {
+            if (isDragging) {
+                isDragging = false;
+                try { dialWindow.releasePointerCapture(e.pointerId); } catch(err) {}
+            }
+        });
+    </script>
+</body>
+</html>

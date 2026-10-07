@@ -79,6 +79,10 @@
         let currentFreq = 88.0;
         let dynamicEnergy = 0;
 
+        // Tracks background playhead states for pre-recorded files: { [fileUrl]: { currentTime, realTime } }
+        const stationPlaybackStates = {};
+        let activeSourceFile = null;
+
         const stations = {
             88.0: { name: "Cryonical", file: "audio/Cryonical 2026.mp3" },
             88.3: { name: "Idiot", file: "audio/Idiot 2026.mp3" },
@@ -211,9 +215,6 @@
                     }
 
                     if (sum === 0) {
-                        // CORS Tainted stream detected (Safari live feed block).
-                        // Drive reaction directly from audio element playback state & network progression pulses, 
-                        // ensuring the wavelength velocity responds explicitly to audio transmission parameters.
                         dynamicEnergy += (Math.random() * 0.4 - 0.2);
                         dynamicEnergy = Math.max(0.2, Math.min(1.5, dynamicEnergy));
                         
@@ -244,8 +245,24 @@
         window.addEventListener('resize', resize);
         resize(); requestAnimationFrame(draw);
 
+        // Save current timestamp state when tuning away from a pre-recorded track
+        function saveCurrentPlaybackState() {
+            if (activeSourceFile && !stationPlaybackStates[activeSourceFile]?.isLive) {
+                if (!audioEl.paused && !isNaN(audioEl.duration)) {
+                    stationPlaybackStates[activeSourceFile] = {
+                        currentTime: audioEl.currentTime,
+                        realTime: Date.now()
+                    };
+                }
+            }
+        }
+
         function playSource(url, isLive) {
             if (!isPowerOn) return;
+
+            saveCurrentPlaybackState();
+            activeSourceFile = url;
+
             if (hls) { hls.destroy(); hls = null; }
             audioEl.pause(); 
             audioEl.src = ""; 
@@ -270,8 +287,18 @@
                 }
             } else {
                 audioEl.src = url; 
-                audioEl.load(); 
-                audioEl.play().catch(err => console.warn("MP3 Play block:", err));
+                audioEl.load();
+
+                // Compute simulated background elapsed time
+                audioEl.onloadedmetadata = () => {
+                    let targetTime = 0;
+                    if (stationPlaybackStates[url] && stationPlaybackStates[url].realTime) {
+                        const elapsedSec = (Date.now() - stationPlaybackStates[url].realTime) / 1000;
+                        targetTime = (stationPlaybackStates[url].currentTime + elapsedSec) % audioEl.duration;
+                    }
+                    audioEl.currentTime = targetTime;
+                    audioEl.play().catch(err => console.warn("MP3 Play block:", err));
+                };
             }
         }
 
@@ -291,6 +318,8 @@
                     playSource(s.file, s.isLive);
                 }
             } else {
+                saveCurrentPlaybackState();
+                activeSourceFile = null;
                 if (hls) { hls.destroy(); hls = null; }
                 stationDisplay.textContent = `MUTED (DEAD AIR)... [ FREQ: ${freq.toFixed(1)} MHz ]`;
                 if (!audioEl.paused) {
@@ -306,13 +335,17 @@
             isPowerOn = true;
             
             const s = stations[88.0];
+            activeSourceFile = s.file;
             audioEl.src = s.file;
-            audioEl.play().then(() => {
-                tune(currentFreq);
-            }).catch(err => {
-                console.warn("Power prime action intercepted:", err);
-                tune(currentFreq);
-            });
+            audioEl.onloadedmetadata = () => {
+                audioEl.currentTime = 0;
+                audioEl.play().then(() => {
+                    tune(currentFreq);
+                }).catch(err => {
+                    console.warn("Power prime action intercepted:", err);
+                    tune(currentFreq);
+                });
+            };
         }
 
         stationDisplay.addEventListener('click', () => {
